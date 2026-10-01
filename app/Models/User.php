@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -30,5 +32,17 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function customerProfile(): HasOne{
+         return $this->hasOne(CustomerProfile::class);
+    }
+
+    public function DeliveryPartnerProfile(): HasOne{
+         return $this->hasOne(DeliveryPartnerProfile::class);
+    }
+
+    public function Address(): HasMany{
+         return $this->hasMany(Address::class);
     }
 }

@@ -38,11 +38,16 @@ class User extends Authenticatable implements MustVerifyEmail
          return $this->hasOne(CustomerProfile::class);
     }
 
-    public function DeliveryPartnerProfile(): HasOne{
+    public function PartnerProfile(): HasOne{
          return $this->hasOne(DeliveryPartnerProfile::class);
     }
 
-    public function Address(): HasMany{
+    public function address(): HasMany{
          return $this->hasMany(Address::class);
     }
+
+    public function restaurantStaff(): HasMany{
+         return $this->hasMany(RestaurantStaff::class);
+    }
+
 }

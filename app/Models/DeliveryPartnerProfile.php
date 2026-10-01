@@ -10,7 +10,6 @@ class DeliveryPartnerProfile extends Model
     protected $fillable = [
         'user_id',
         'vehicle_type',
-        'vehicle_type',
         'vehicle_number',
         'license_number',
         'is_available',

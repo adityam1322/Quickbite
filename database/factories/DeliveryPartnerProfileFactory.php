@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\DeliveryPartnerProfile;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,9 +20,9 @@ class DeliveryPartnerProfileFactory extends Factory
     {
         return [
         'user_id' => User::factory(),
-        'vehicle_type' => fake()->vehicleType(),
-        'vehicle_number' => fake()->unique()->vehicalNumber('####'),
-        'license_number' => fake()->unique()->licenceNumber(),
+        'vehicle_type' => fake()->randomElement(['Bike','Bicycle','Scooter']),
+        'vehicle_number' => fake()->unique()->bothify('MH-##-??-####'),
+        'license_number' => fake()->unique()->bothify('DL-########'),
         'is_available' => fake()->boolean(),
         ];
     }

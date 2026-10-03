@@ -21,16 +21,16 @@ class RestaurantFactory extends Factory
 
         return [
         'name' => $name,
-        'slug' => fake(),
-        'description'=> fake()->discription(),
-        'phone' => fake()->unique()->phonenumber(),
+        'slug' => strtolower(str_replace(' ', '_', $name)),
+        'description'=> fake()->paragraph(),
+        'phone' => fake()->unique()->phoneNumber(),
         'email' => strtolower(str_replace(' ', '', $name)) . '@gmail.com',
         'address_line_1' => fake()->unique()->streetAddress(),
-        'address_line_2'=> fake()->unique()->secondStreetAddress(),
+        'address_line_2'=> fake()->unique()->Address(),
         'city' => fake()->city(),
         'state' => fake()->state(),
-        'postal_code' => fake()->unique()->postalCode(),
-        'latitude'fake()->longitude(8 , 37),
+        'postal_code' => fake()->unique()->numerify('###-###'),
+        'latitude' => fake()->latitude(8 , 37),
         'longitude' => fake()->longitude(68 , 98),
         'is_active' => fake()->boolean(),
         ];

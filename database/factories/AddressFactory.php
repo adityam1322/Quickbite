@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Adress;
+use App\Models\Address;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Adress>
+ * @extends Factory<Address>
  */
 class AddressFactory extends Factory
 {
@@ -19,13 +20,13 @@ class AddressFactory extends Factory
     {
         return [
         'user_id' => User::factory(),
-        'label' => fake()->randomLable()  ,
+        'label' => fake()->word()  ,
         'address_line_1' => fake()->streetAddress(),
-        'address_line_2'=> fake()->secondStreetAddress(),
+        'address_line_2'=> fake()->Address(),
         'city' => fake()->city(),
         'state' => fake()->state(),
-        'postal_code' => fake()->postal_code(),
-        'latitude'fake()->longitude(8 , 37),
+        'postal_code' => fake()->numerify('###-###'),
+        'latitude' => fake()->latitude(8 , 37),
         'longitude' => fake()->longitude(68 , 98),
         'is_default' => fake()->boolean(40),
         ];

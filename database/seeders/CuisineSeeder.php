@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Cuisine;
 
 class CuisineSeeder extends Seeder
 {
@@ -12,6 +13,6 @@ class CuisineSeeder extends Seeder
      */
     public function run(): void
     {
-        Cuisine::factory()->count(10)->created();
+        Cuisine::factory()->count(10)->create();
     }
 }

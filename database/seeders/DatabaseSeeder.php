@@ -20,7 +20,11 @@ class DatabaseSeeder extends Seeder
             AddressSeeder::class,
             CuisineSeeder::class,
             CustomerProfileSeeder::class,
-
+            DeliveryPartnerProfileSeeder::class,
+            RestaurantHoursSeeder::class,
+            RestaurantSeeder::class,
+            RestaurantServiceAreaSeeder::class,
+            RestaurantStaffSeeder::class,
         ]);
     }
 }

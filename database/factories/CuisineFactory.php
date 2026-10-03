@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Cuisine;
+use Illuminate\Database\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,7 +24,7 @@ class CuisineFactory extends Factory
 
         return [
         'name' => $name,
-        'slug' => fake(),
+        'slug' => strtolower(str_replace(' ', '_', $name)),
         'is_active' => fake()->boolean(),
         ];
     }

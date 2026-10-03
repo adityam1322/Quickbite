@@ -4,15 +4,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Address;
+use App\Models\RestaurantHours;
 
-class AddressSeeder extends Seeder
+class RestaurantHoursSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Address::factory()->count(10)->create();
+        RestaurantHours::factory()->count(10)->create();
     }
 }

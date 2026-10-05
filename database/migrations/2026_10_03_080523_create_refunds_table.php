@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('amount');
             $table->text('reson');
             $table->string('status');
-            $table->timestamps('refunded')->nullable();
+            $table->timestamp('refunded')->nullable();
 
             $table->timestamps();
         });

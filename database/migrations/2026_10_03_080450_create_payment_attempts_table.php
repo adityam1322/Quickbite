@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('amount');
             $table->string('status');
             $table->text('responce_massage')->nullable();
-            $table->timestamps('attempted-at');
+            $table->timestamp('attempted-at');
 
             $table->timestamps();
         });

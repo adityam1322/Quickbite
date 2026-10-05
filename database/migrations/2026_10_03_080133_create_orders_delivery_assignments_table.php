@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('delivery_partner_profile_id')
                   ->constrained()
                   ->cascadeOnDelete();
-            $tabble->timestamps('assigned_at');
-            $tabble->timestamps('picked_up_at')->nullable();
+            $table->timestamp('assigned_at');
+            $table->timestamp('picked_up_at')->nullable();
             $table->string('status');
             
             $table->timestamps();

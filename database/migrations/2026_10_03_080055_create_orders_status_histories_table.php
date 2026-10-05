@@ -19,7 +19,7 @@ return new class extends Migration
                   ->cascadeOnDelete();
             $table->string('status');
             $table->text('notes')->nullable();
-            $table->timestamps('changed_at');
+            $table->timestamp('changed_at')->nullable();
 
             $table->timestamps();
         });

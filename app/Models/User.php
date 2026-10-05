@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasApiTokens, Notifiable;
     use HasRoles;
 
     /**
@@ -48,6 +48,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function restaurantStaff(): HasMany{
          return $this->hasMany(RestaurantStaff::class);
+    }
+
+     public function order(): HasMany{
+         return $this->hasMany(Order::class);
     }
 
 }

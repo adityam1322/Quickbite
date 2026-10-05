@@ -19,8 +19,8 @@ return new class extends Migration
             $table->decimal('discount_value');
             $table->decimal('min_order_amount');
             $table->decimal('max_discount')->nullable();
-            $table->timestamps('start_at');
-            $table->timestamps('expire_at');
+            $table->timestamp('start_at');
+            $table->timestamp('expire_at');
             $table->unsignedInteger('usages_limit');
             $table->boolean('is_active');
 

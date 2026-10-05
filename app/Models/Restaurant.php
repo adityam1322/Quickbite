@@ -49,5 +49,17 @@ class Restaurant extends Model
         return $this->hasMany(RestaurantStaff::class);
     }
 
+    public function Categorie(): HasMany{
+        return $this->HasMany(MenuCategorie::class);
+    }
+    
+    public function cart(): HasMany{
+        return $this->HasMany(Cart::class);
+    }
+
+    public function order(): HasMany{
+        return $this->hasMany(Order::class);
+    }
+
 
 }

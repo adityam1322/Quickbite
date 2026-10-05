@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('amount');
             $table->string('currency');
             $table->string('status');
-            $table->timestamps('paid_at')->nullable;
+            $table->timestamp('paid_at')->nullable;
 
 
             $table->timestamps();

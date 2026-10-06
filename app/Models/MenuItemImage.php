@@ -4,23 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MenuItemImage extends Model
 {
-    /** @use HasFactory<\Database\Factories\MenuItemImageFactory> */
     use HasFactory;
-    protected $fillable[
+
+    protected $table = 'menu_items_images';
+
+    protected $fillable = [
         'menu_item_id',
         'image_url',
         'is_primary',
     ];
 
-    protected $casts[
+    protected $casts = [
         'is_primary' => 'boolean',
     ];
 
-    public function menuItem():belongsTo{
-        return $table->belongsTo(MenuItem::class);
+    public function menuItem(): BelongsTo
+    {
+        return $this->belongsTo(MenuItem::class);
     }
 }

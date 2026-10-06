@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class MenuItemPrice extends Model
 {
-    /** @use HasFactory<\Database\Factories\MenuItemPriceFactory> */
     use HasFactory;
-    protected $fillable[
+
+    protected $table = 'menu_items_price';
+
+    protected $fillable = [
         'menu_item_id',
         'price',
         'currency',
@@ -19,15 +20,14 @@ class MenuItemPrice extends Model
         'effective_until',
     ];
 
-    protected $casts[
+    protected $casts = [
         'price' => 'decimal:2',
         'effective_from' => 'date',
         'effective_until' => 'date',
     ];
 
-    public function menuItem(): belongsTo{
-        return $table->belongsTo(MenuItem::class);
+    public function menuItem(): BelongsTo
+    {
+        return $this->belongsTo(MenuItem::class);
     }
-
-
 }

@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use Database\Factories\CartItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CartItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\CartItemFactory> */
+    /** @use HasFactory<CartItemFactory> */
     use HasFactory;
-    protected $fillable[
+
+    protected $fillable = [
         'cart_id',
         'menu_item_id',
         'menu_items_variants_id',
@@ -19,20 +21,27 @@ class CartItem extends Model
         'subtotal',
     ];
 
-    protected $casts[
-        'quantity' => 'unsignedInteger',
-        'unit_price' => 'unit_price',
-        'subtotal' => 'subtotal',
+    protected $casts = [
+        'quantity' => 'integer',
+        'unit_price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
     ];
 
-    public function cart():belongsTo{
-        return $table->belongsTo(Cart::class);
+    /** @return BelongsTo<Cart, $this> */
+    public function cart(): BelongsTo
+    {
+        return $this->belongsTo(Cart::class);
     }
 
-    public function menuItem():belongsTo{
-        return $table->belongsTo(MenuItem::class);
+    /** @return BelongsTo<MenuItem, $this> */
+    public function menuItem(): BelongsTo
+    {
+        return $this->belongsTo(MenuItem::class);
     }
-    public function menuItemVariant():belongsTo{
-        return $table->belongsTo(MenuItemVariant::class);
+
+    /** @return BelongsTo<MenuItemVariant, $this> */
+    public function menuItemVariant(): BelongsTo
+    {
+        return $this->belongsTo(MenuItemVariant::class, 'menu_items_variants_id');
     }
 }

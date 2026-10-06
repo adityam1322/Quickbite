@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\MenuItem;
 use App\Models\MenuItemImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,9 @@ class MenuItemImageFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'menu_item_id' => MenuItem::factory(),
+            'image_url' => fake()->imageUrl(),
+            'is_primary' => true,
         ];
     }
 }

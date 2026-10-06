@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Restaurant extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'slug',
@@ -32,34 +33,45 @@ class Restaurant extends Model
         'is_active' => 'boolean',
     ];
 
-    public function Hours(): HasMany{
-         return $this->hasMany(RestaurantHours::class);
+    /** @return HasMany<RestaurantHours, $this> */
+    public function hours(): HasMany
+    {
+        return $this->hasMany(RestaurantHours::class);
     }
 
-    public function cuisines(): BelongsToMany{
+    /** @return BelongsToMany<Cuisine, $this> */
+    public function cuisines(): BelongsToMany
+    {
         return $this->belongsToMany(Cuisine::class);
     }
 
-    public function Servicearea(): HasMany{
-        return $this->HasMany(RestaurantServicearea::class);
+    /** @return HasMany<RestaurantServiceArea, $this> */
+    public function serviceAreas(): HasMany
+    {
+        return $this->hasMany(RestaurantServiceArea::class);
     }
 
+    /** @return HasMany<RestaurantStaff, $this> */
     public function staff(): HasMany
     {
         return $this->hasMany(RestaurantStaff::class);
     }
 
-    public function Categorie(): HasMany{
-        return $this->HasMany(MenuCategorie::class);
-    }
-    
-    public function cart(): HasMany{
-        return $this->HasMany(Cart::class);
+    /** @return HasMany<MenuCategorie, $this> */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(MenuCategorie::class);
     }
 
-    public function order(): HasMany{
+    /** @return HasMany<Cart, $this> */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    /** @return HasMany<Order, $this> */
+    public function orders(): HasMany
+    {
         return $this->hasMany(Order::class);
     }
-
-
 }

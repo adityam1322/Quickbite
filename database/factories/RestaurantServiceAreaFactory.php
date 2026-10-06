@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\RestaurantServiceArea;
 use App\Models\Restaurant;
+use App\Models\RestaurantServiceArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,11 +19,11 @@ class RestaurantServiceAreaFactory extends Factory
     public function definition(): array
     {
         return [
-        'restaurant_id' => Restaurant::factory(),
-        'area_name' => fake()->city(),
-        'city' => fake()->city(),
-        'postal_code' => fake()->numerify('###-###'),
-        'is_active' => fake()->boolean(),
+            'restaurant_id' => Restaurant::factory(),
+            'area_name' => fake()->unique()->city(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
+            'is_active' => true,
         ];
     }
 }

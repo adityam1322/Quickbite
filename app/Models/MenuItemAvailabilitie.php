@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class MenuItemAvailabilitie extends Model
 {
-    /** @use HasFactory<\Database\Factories\MenuItemAvailabilitieFactory> */
     use HasFactory;
-    protected $fillable[
+
+    protected $table = 'menu_items_availabilities';
+
+    protected $fillable = [
         'menu_item_id',
         'date_of_week',
         'start_time',
@@ -19,13 +20,12 @@ class MenuItemAvailabilitie extends Model
         'is_available',
     ];
 
-    protected $casts[
-        'start_time' => 'time',
-        'end_time' => 'time',
+    protected $casts = [
         'is_available' => 'boolean',
     ];
 
-    public function menuItem():belongsTo{
-        return $table->belongsTo(MenuItem::class);
+    public function menuItem(): BelongsTo
+    {
+        return $this->belongsTo(MenuItem::class);
     }
 }

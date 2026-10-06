@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\MenuItemImage;
 
 class MenuItemImageSeeder extends Seeder
 {
@@ -12,6 +13,6 @@ class MenuItemImageSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        MenuItemImage::factory()->count(10)->create();
     }
 }

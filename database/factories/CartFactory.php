@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,9 @@ class CartFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'order_id' => Order::factory(),
+            'restaurant_id' => fn (array $attributes): int => Order::findOrFail($attributes['order_id'])->restaurant_id,
+            'status' => fake()->randomElement(['active', 'checked_out', 'abandoned']),
         ];
     }
 }

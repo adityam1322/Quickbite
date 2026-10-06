@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\RestaurantStaff;
 use App\Models\Restaurant;
+use App\Models\RestaurantStaff;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,10 +20,10 @@ class RestaurantStaffFactory extends Factory
     public function definition(): array
     {
         return [
-        'restaurant_id' => Restaurant::factory(),
-        'user_id' => User::factory(),
-        'role' => fake()->randomElement(['Manager', 'Chef', 'Cashior']),
-        'is_active' => true,
+            'restaurant_id' => Restaurant::factory(),
+            'user_id' => User::factory(),
+            'role' => fake()->randomElement(['manager', 'chef', 'cashier']),
+            'is_active' => true,
         ];
     }
 }

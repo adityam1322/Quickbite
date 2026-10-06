@@ -19,9 +19,9 @@ class CustomerProfileFactory extends Factory
     public function definition(): array
     {
         return [
-           'user_id' => User::factory(),
-           'phone' => fake()->phonenumber(),
-           'date_of_birth' => fake()->date('Y-m-d'),
+            'user_id' => User::factory(),
+            'phone' => fake()->phoneNumber(),
+            'date_of_birth' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
         ];
     }
 }

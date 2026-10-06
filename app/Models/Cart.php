@@ -2,31 +2,38 @@
 
 namespace App\Models;
 
+use Database\Factories\CartFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\hasMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cart extends Model
 {
-    /** @use HasFactory<\Database\Factories\CartFactory> */
+    /** @use HasFactory<CartFactory> */
     use HasFactory;
-    protected $fillable[
+
+    protected $fillable = [
         'order_id',
         'restaurant_id',
         'status',
     ];
 
-    public function order():belongsTo{
-        return $table->belongsTo(Order::class);
+    /** @return BelongsTo<Order, $this> */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 
-    public function restaurant():belongsTo{
-        return $table->belongsTo(Restaurant::class);
+    /** @return BelongsTo<Restaurant, $this> */
+    public function restaurant(): BelongsTo
+    {
+        return $this->belongsTo(Restaurant::class);
     }
 
-    public function cartItem():hasMany{
-        return $table->hasMany(CartItem::class);
+    /** @return HasMany<CartItem, $this> */
+    public function items(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
     }
-    
 }

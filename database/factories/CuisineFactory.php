@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Cuisine;
-use Illuminate\Database\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,13 +18,14 @@ class CuisineFactory extends Factory
     public function definition(): array
     {
 
-        $name = fake()->name();
-
+        $name = fake()->randomElement([
+            'American', 'Chinese', 'Indian', 'Italian', 'Japanese', 'Mexican',
+        ]);
 
         return [
-        'name' => $name,
-        'slug' => strtolower(str_replace(' ', '_', $name)),
-        'is_active' => fake()->boolean(),
+            'name' => $name,
+            'slug' => str($name)->slug()->toString(),
+            'is_active' => true,
         ];
     }
 }

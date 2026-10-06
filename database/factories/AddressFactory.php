@@ -19,16 +19,16 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-        'user_id' => User::factory(),
-        'label' => fake()->word()  ,
-        'address_line_1' => fake()->streetAddress(),
-        'address_line_2'=> fake()->Address(),
-        'city' => fake()->city(),
-        'state' => fake()->state(),
-        'postal_code' => fake()->numerify('###-###'),
-        'latitude' => fake()->latitude(8 , 37),
-        'longitude' => fake()->longitude(68 , 98),
-        'is_default' => fake()->boolean(40),
+            'user_id' => User::factory(),
+            'label' => fake()->randomElement(['Home', 'Work']),
+            'address_line_1' => fake()->streetAddress(),
+            'address_line_2' => fake()->optional()->secondaryAddress(),
+            'city' => fake()->city(),
+            'state' => fake()->state(),
+            'postal_code' => fake()->postcode(),
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
+            'is_default' => true,
         ];
     }
 }

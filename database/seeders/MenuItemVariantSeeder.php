@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\MenuItemVariant;
 
 class MenuItemVariantSeeder extends Seeder
 {
@@ -12,6 +13,6 @@ class MenuItemVariantSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        MenuItemVariant::factory()->count(10)->create();
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\RestaurantHours;
 use App\Models\Restaurant;
+use App\Models\RestaurantHours;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,11 +19,11 @@ class RestaurantHoursFactory extends Factory
     public function definition(): array
     {
         return [
-        'restaurant_id' => Restaurant::factory(),
-        'day_of_week' => fake()->numberBetween(0,6),
-        'open_time' => fake()->time(),
-        'close_time' => fake()->time(),
-        'is_closed' => fake()->boolean(),
+            'restaurant_id' => Restaurant::factory(),
+            'day_of_week' => fake()->numberBetween(0, 6),
+            'open_time' => '09:00:00',
+            'close_time' => '21:00:00',
+            'is_closed' => false,
         ];
     }
 }

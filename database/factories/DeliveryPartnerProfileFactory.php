@@ -19,11 +19,11 @@ class DeliveryPartnerProfileFactory extends Factory
     public function definition(): array
     {
         return [
-        'user_id' => User::factory(),
-        'vehicle_type' => fake()->randomElement(['Bike','Bicycle','Scooter']),
-        'vehicle_number' => fake()->unique()->bothify('MH-##-??-####'),
-        'license_number' => fake()->unique()->bothify('DL-########'),
-        'is_available' => fake()->boolean(),
+            'user_id' => User::factory(),
+            'vehicle_type' => fake()->randomElement(['Bicycle', 'Car', 'Scooter']),
+            'vehicle_number' => fake()->unique()->bothify('QB-##-??-####'),
+            'license_number' => fake()->unique()->bothify('DL-########'),
+            'is_available' => true,
         ];
     }
 }

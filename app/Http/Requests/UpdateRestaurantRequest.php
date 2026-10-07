@@ -23,6 +23,13 @@ class UpdateRestaurantRequest extends FormRequest
                 'max:255',
             ],
 
+            'image' => [
+                 'sometimes',
+                 'image',
+                 'mimes:jpg,jpeg,png,webp',
+                 'max:2048',
+            ],
+
             'description' => [
                 'sometimes',
                 'nullable',

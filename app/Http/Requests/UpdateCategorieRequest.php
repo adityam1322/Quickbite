@@ -4,24 +4,19 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMenuItemRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return $this->user()->can(
-            'update',
-            $this->route('menu_item')
+           'update',
+           $this->route('category')
         );
     }
 
     public function rules(): array
     {
-       return [
-            'menu_categories_id' => [
-                'sometimes',
-                'exists:menu_categories,id',
-            ],
-
+        return [
             'restaurant_id' => [
                 'sometimes',
                 'exists:restaurants,id',
@@ -39,18 +34,13 @@ class UpdateMenuItemRequest extends FormRequest
                 'max:255',
             ],
 
-            'discription' => [
+            'description' => [
                 'sometimes',
                 'nullable',
                 'string',
             ],
 
-            'is_vegetarian' => [
-                'sometimes',
-                'boolean',
-            ],
-
-            'is_available' => [
+            'is_active' => [
                 'sometimes',
                 'boolean',
             ],

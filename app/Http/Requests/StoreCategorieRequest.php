@@ -2,56 +2,54 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMenuItemRequest extends FormRequest
+class StoreCategorieRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return $this->user()->can(
-            'update',
-            $this->route('menu_item')
+            'create',
+            Categorie::class
         );
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
-       return [
-            'menu_categories_id' => [
-                'sometimes',
-                'exists:menu_categories,id',
-            ],
-
+        eturn [
             'restaurant_id' => [
-                'sometimes',
+                'required',
                 'exists:restaurants,id',
             ],
 
             'name' => [
-                'sometimes',
+                'required',
                 'string',
                 'max:255',
             ],
 
             'slug' => [
-                'sometimes',
+                'required',
                 'string',
                 'max:255',
             ],
 
-            'discription' => [
-                'sometimes',
+            'description' => [
                 'nullable',
                 'string',
             ],
 
-            'is_vegetarian' => [
-                'sometimes',
-                'boolean',
-            ],
-
-            'is_available' => [
-                'sometimes',
+            'is_active' => [
+                'required',
                 'boolean',
             ],
         ];

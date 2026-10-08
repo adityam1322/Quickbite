@@ -19,12 +19,12 @@ class MenuItem extends Model
         'slug',
         'discription',
         'is_vegetarian',
-        'is_available',
+        'is_avialable',
     ];
 
     protected $casts = [
         'is_vegetarian' => 'boolean',
-        'is_available' => 'boolean',
+        'is_avialable' => 'boolean',
     ];
 
     /** @return BelongsTo<MenuCategorie, $this> */

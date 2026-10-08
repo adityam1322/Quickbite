@@ -16,7 +16,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\TransientToken;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password'])]  
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -75,5 +75,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function ownedRestaurants(): HasMany
+    {
+        return $this->hasMany(Restaurant::class, 'owner_id');
     }
 }

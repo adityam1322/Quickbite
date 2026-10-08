@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMenuItemRequest;
 use App\Http\Requests\UpdateMenuItemRequest;
 use App\Http\Resources\MenuItemResource;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
+use App\Services\RestaurantDiscoveryCache;
 
 class MenuItemController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $menuItems = MenuItem::query()
@@ -32,11 +36,14 @@ class MenuItemController extends Controller
         return MenuItemResource::collection($menuItems);
     }
 
-    public function store(StoreMenuItemRequest $request)
+    public function store(StoreMenuItemRequest $request, RestaurantDiscoveryCache $cache )
     {
         $menuItem = MenuItem::create(
             $request->validated()
         );
+        
+        //invalidate
+        $cache->invalidate();
 
         return (new MenuItemResource($menuItem))
             ->response()
@@ -52,7 +59,8 @@ class MenuItemController extends Controller
 
     public function update(
         UpdateMenuItemRequest $request,
-        MenuItem $menuItem
+        MenuItem $menuItem,
+        RestaurantDiscoveryCache $cache
     ) {
         $this->authorize('update', $menuItem);
 
@@ -60,14 +68,20 @@ class MenuItemController extends Controller
             $request->validated()
         );
 
+        //invalidate
+        $cache->invalidate();
+
         return new MenuItemResource($menuItem->fresh());
     }
 
-    public function destroy(MenuItem $menuItem)
+    public function destroy(MenuItem $menuItem, RestaurantDiscoveryCache $cache)
     {
         $this->authorize('delete', $menuItem);
 
         $menuItem->delete();
+
+        //invalidate
+        $cache->invalidate();
 
         return response()->json([
             'message' => 'Menu item deleted successfully.',

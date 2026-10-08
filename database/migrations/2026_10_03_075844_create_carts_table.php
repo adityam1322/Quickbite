@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->foreignId('order_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('restaurant_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('status');
 
             $table->timestamps();

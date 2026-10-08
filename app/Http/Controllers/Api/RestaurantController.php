@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Cache;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RestaurantController extends Controller
 {
+    use AuthorizesRequests;
+    
     public function index(Request $request)
     {
         $version = Cache::get('restaurants.discovery.version', 1);
@@ -29,7 +32,7 @@ class RestaurantController extends Controller
             now()->addMinutes(5),
             function () use ($request) {
                 return QueryBuilder::for(Restaurant::class)
-                    ->allowedFilters([
+                    ->allowedFilters(
                         AllowedFilter::callback('cuisine', function ($query, $value) {
                             $query->whereHas('cuisines', function ($q) use ($value) {
                                 $q->where('slug', $value);
@@ -79,20 +82,17 @@ class RestaurantController extends Controller
                                 $q->where('postal_code', $value)
                                     ->where('is_active', true);
                             });
-                        }),
-                    ])
+                        })
+                    )
 
-                    ->allowedSorts([
-                        'name',
-                        'created_at',
-                    ])
+                    ->allowedSorts('name', 'created_at')
 
-                    ->allowedIncludes([
+                    ->allowedIncludes(
                         'cuisines',
                         'hours',
                         'serviceAreas',
                         'categories',
-                    ])
+                    )
 
                     ->defaultSort('-created_at')
 
@@ -104,7 +104,7 @@ class RestaurantController extends Controller
         return RestaurantResource::collection($restaurants);
     }
 
-    public function store(StoreRestaurantRequest $request): RestaurantResource
+    public function store(StoreRestaurantRequest $request): JsonResponse
     {
         $data = $request->validated();
 

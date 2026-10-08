@@ -29,6 +29,7 @@ return new class extends Migration
 
     $table->decimal('latitude', 10, 7)->nullable();
     $table->decimal('longitude', 10, 7)->nullable();
+    $table->decimal('minimum_order_amount', 10, 2)->default(0);
 
     $table->boolean('is_active')->default(true);
 

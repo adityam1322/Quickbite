@@ -14,6 +14,7 @@ class Cart extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'order_id',
         'restaurant_id',
         'status',
@@ -35,5 +36,10 @@ class Cart extends Model
     public function items(): HasMany
     {
         return $this->hasMany(CartItem::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

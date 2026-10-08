@@ -24,6 +24,7 @@ class Restaurant extends Model
         'postal_code',
         'latitude',
         'longitude',
+        'minimum_order_amount',
         'is_active',
     ];
 
@@ -31,6 +32,7 @@ class Restaurant extends Model
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
         'is_active' => 'boolean',
+        'minimum_order_amount' => 'decimal:2',
     ];
 
     /** @return HasMany<RestaurantHours, $this> */

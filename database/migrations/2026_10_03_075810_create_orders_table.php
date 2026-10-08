@@ -15,20 +15,23 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('restaurant_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('address_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('order_number')->unique();
-            $table->decimal('subtotal');
-            $table->decimal('delivery_fee');
-            $table->decimal('total_amount');
+            $table->decimal('subtotal', 10, 2);
+            $table->decimal('tax_amount', 10, 2);
+            $table->decimal('delivery_fee', 10, 2);
+            $table->decimal('discount_amount', 10, 2);
+            $table->decimal('total_amount', 10, 2);
             $table->string('payment_status');
             $table->string('order_status');
+            $table->string('idempotency_key')->unique();
             $table->text('notes');
 
             $table->timestamps();

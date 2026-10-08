@@ -19,7 +19,7 @@ class CuisineFactory extends Factory
     {
 
         $name = fake()->randomElement([
-            'American', 'Chinese', 'Indian', 'Italian', 'Japanese', 'Mexican',
+         'Chinese', 'Indian', 'Italian', 'Japanese', 'Mexican',
         ]);
 
         return [

@@ -18,6 +18,7 @@ class PaymentAttempt extends Model
         'status',
         'responce_massage',
         'attempted-at',
+        'idempotency_key',
     ];
 
     protected $casts = [

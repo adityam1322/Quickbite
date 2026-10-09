@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreOrderRequest;
 use App\Services\OrderCalculationService;
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
 use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Coupon;
+use App\Services\OrderStatusService;
 
 class OrderController extends Controller
 {
@@ -240,6 +242,51 @@ class OrderController extends Controller
             $calculation,
             $idempotencyKey
         ) {
+            //Handle concurrent availability changes safely
+
+            $cart->load([
+                'items.menuItem',
+                'items.menuItemVariant',
+            ]);
+
+            foreach ($cart->items as $cartItem) {
+
+                // Lock menu item row
+                $menuItem = \App\Models\MenuItem::where(
+                    'id',
+                    $cartItem->menu_item_id
+                )
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $menuItem || ! $menuItem->is_available) {
+                    throw new \RuntimeException(
+                        $cartItem->menuItem->name . ' is currently unavailable.'
+                    );
+                }
+
+                // Lock variant row if selected
+                if ($cartItem->menu_items_variants_id) {
+
+                    $variant = \App\Models\MenuItemVariant::where(
+                        'id',
+                        $cartItem->menu_items_variants_id
+                    )
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (! $variant || ! $variant->is_avialable) {
+                        throw new \RuntimeException(
+                            $cartItem->menuItemVariant?->name .
+                                ' variant is currently unavailable.'
+                        );
+                    }
+                }
+            }
+
+
+
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'restaurant_id' => $cart->restaurant_id,
@@ -318,4 +365,27 @@ class OrderController extends Controller
             'order' => $order->fresh(),
         ]);
     }
+
+    public function updateStatus(
+    Request $request,
+    int $orderId,
+    OrderStatusService $service
+) {
+    $validated = $request->validate([
+        'status' => ['required', 'string'],
+        'notes' => ['nullable', 'string', 'max:255'],
+    ]);
+
+    $order = $service->changeStatus(
+        $orderId,
+        $validated['status'],
+        $request->user()?->id,
+        $validated['notes'] ?? null
+    );
+
+    return response()->json([
+        'message' => 'Order status updated successfully.',
+        'data' => $order,
+    ]);
+}
 }

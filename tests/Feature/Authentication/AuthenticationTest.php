@@ -78,13 +78,22 @@ it('revokes the current token on logout', function () {
 
     $user->assignRole('customer');
 
-    $token = $user
-        ->createToken('test-token')
-        ->plainTextToken;
+    $createdToken = $user->createToken('test-token');
+
+    $token = $createdToken->plainTextToken;
+    $tokenId = $createdToken->accessToken->id;
 
     $this->withToken($token)
         ->postJson('/api/logout')
         ->assertOk();
+
+    // Confirm the current token was deleted.
+    $this->assertDatabaseMissing('personal_access_tokens', [
+        'id' => $tokenId,
+    ]);
+
+    // Clear cached authentication guards before checking the old token.
+    $this->app['auth']->forgetGuards();
 
     $this->withToken($token)
         ->getJson('/api/me')
@@ -96,21 +105,35 @@ it('revokes all tokens on logout all', function () {
 
     $user->assignRole('customer');
 
-    $token1 = $user
-        ->createToken('device-one')
-        ->plainTextToken;
+    $createdToken1 = $user->createToken('device-one');
+    $createdToken2 = $user->createToken('device-two');
 
-    $token2 = $user
-        ->createToken('device-two')
-        ->plainTextToken;
+    $token1 = $createdToken1->plainTextToken;
+    $token2 = $createdToken2->plainTextToken;
+
+    $tokenId1 = $createdToken1->accessToken->id;
+    $tokenId2 = $createdToken2->accessToken->id;
 
     $this->withToken($token1)
         ->postJson('/api/logout-all')
         ->assertOk();
 
+    // Confirm both tokens were deleted.
+    $this->assertDatabaseMissing('personal_access_tokens', [
+        'id' => $tokenId1,
+    ]);
+
+    $this->assertDatabaseMissing('personal_access_tokens', [
+        'id' => $tokenId2,
+    ]);
+
+    $this->app['auth']->forgetGuards();
+
     $this->withToken($token1)
         ->getJson('/api/me')
         ->assertUnauthorized();
+
+    $this->app['auth']->forgetGuards();
 
     $this->withToken($token2)
         ->getJson('/api/me')

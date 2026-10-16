@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('vehicle_number')->nullable();
             $table->string('license_number')->nullable();
             $table->boolean('is_available')->default(false);
+            $table->string('area')->nullable()->index();
            
             $table->timestamps();
         });

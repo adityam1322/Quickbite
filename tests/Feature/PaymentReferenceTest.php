@@ -43,20 +43,20 @@ class PaymentReferenceTest extends TestCase
         $order = Order::factory()->create();
 
         $payment = Payment::create([
-    'order_id' => $order->id,
-    'payment_method' => 'online',
-    'amount' => '500.00',
-    'currency' => 'INR',
-    'status' => 'pending',
-    'paid_at' => now(),
-]);
+            'order_id' => $order->id,
+            'payment_method' => 'online',
+            'amount' => '500.00',
+            'currency' => 'INR',
+            'status' => 'pending',
+            'paid_at' => now(),
+        ]);
 
         $refund = Refund::create([
             'payment_id' => $payment->id,
             'amount' => '100.00',
             'status' => 'pending',
             'reson' => 'Customer requested refund',
-'refunded' => now(),
+            'refunded' => now(),
         ]);
 
         app(PaymentReferenceService::class)->saveRefundReference(

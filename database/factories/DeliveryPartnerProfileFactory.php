@@ -24,6 +24,7 @@ class DeliveryPartnerProfileFactory extends Factory
             'vehicle_number' => fake()->unique()->bothify('QB-##-??-####'),
             'license_number' => fake()->unique()->bothify('DL-########'),
             'is_available' => true,
+            'area' => fake()->randomElement(['klayan', 'thane', 'Aroli','Ghansoli','turbhe']),
         ];
     }
 }

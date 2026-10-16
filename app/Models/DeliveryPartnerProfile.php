@@ -17,6 +17,7 @@ class DeliveryPartnerProfile extends Model
         'vehicle_number',
         'license_number',
         'is_available',
+        'area',
     ];
 
     protected $casts = [

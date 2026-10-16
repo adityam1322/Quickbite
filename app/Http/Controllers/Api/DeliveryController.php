@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateDeliveryRequest;
-use App\Models\Delivery;
+use App\Models\DeliveryAssignment;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\UpdateDeliveryAvailabilityRequest;
 
 class DeliveryController extends Controller
 {
@@ -14,11 +15,11 @@ class DeliveryController extends Controller
         $user = request()->user();
 
         if ($user->hasRole('administrator')) {
-            $deliveries = Delivery::query()
+            $deliveries = DeliveryAssignment::query()
                 ->latest()
                 ->get();
         } else {
-            $deliveries = Delivery::query()
+            $deliveries = DeliveryAssignment::query()
                 ->where('delivery_partner_id', $user->id)
                 ->latest()
                 ->get();
@@ -29,7 +30,7 @@ class DeliveryController extends Controller
         ]);
     }
 
-    public function show(Delivery $delivery): JsonResponse
+    public function show(DeliveryAssignment $delivery): JsonResponse
     {
         $this->authorize('view', $delivery);
 
@@ -40,7 +41,7 @@ class DeliveryController extends Controller
 
     public function update(
         UpdateDeliveryRequest $request,
-        Delivery $delivery
+        DeliveryAssignment $delivery
     ): JsonResponse {
         $delivery->update(
             $request->validated()
@@ -49,6 +50,29 @@ class DeliveryController extends Controller
         return response()->json([
             'message' => 'Delivery updated successfully.',
             'delivery' => $delivery->fresh(),
+        ]);
+    }
+
+    public function updateAvailability(
+        UpdateDeliveryAvailabilityRequest $request
+    ): JsonResponse {
+        $user = $request->user();
+
+        $profile = $user->deliveryPartnerProfile;
+
+        if (! $profile) {
+            return response()->json([
+                'message' => 'Delivery partner profile not found.',
+            ], 404);
+        }
+
+        $profile->update([
+            'is_available' => $request->boolean('is_available'),
+        ]);
+
+        return response()->json([
+            'message' => 'Delivery availability updated successfully.',
+            'is_available' => $profile->is_available,
         ]);
     }
 }

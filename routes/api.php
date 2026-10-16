@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Order\RefundOrderController;
 use App\Http\Controllers\Api\Order\RejectOrderController;
 use App\Http\Controllers\Api\Order\StartPreparingOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\OrderExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +108,13 @@ Route::middleware('auth:sanctum')->group(function () {
         'deliveries',
         DeliveryController::class
     );
+
+    //delivery Availability
+
+    Route::patch(
+        '/delivery/availability',
+        [DeliveryController::class, 'updateAvailability']
+    );
 });
 
 /*
@@ -159,3 +167,5 @@ Route::post(
     '/v1/payment/webhook',
     PaymentWebhookController::class
 );
+
+Route::middleware('auth:sanctum')->post('/orders/export',[OrderExportController::class, 'export'] );

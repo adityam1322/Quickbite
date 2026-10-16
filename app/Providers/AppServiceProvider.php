@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use App\Contracts\SmsProvider;
+use App\Services\Sms\FakeSmsProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,14 +18,22 @@ class AppServiceProvider extends ServiceProvider
     {
 
         RateLimiter::for('login', function (Request $request) {
-        return Limit::perMinute(5)->by(
-            $request->ip()
-        );
-      });
-      
+            return Limit::perMinute(5)->by(
+                $request->ip()
+            );
+        });
+
         Gate::policy(
             DeliveryAssignment::class,
             DeliveryPolicy::class
+        );
+    }
+
+    public function register(): void
+    {
+        $this->app->bind(
+            SmsProvider::class,
+            FakeSmsProvider::class
         );
     }
 }

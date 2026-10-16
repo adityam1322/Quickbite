@@ -16,6 +16,13 @@ use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Services\OrderStatusService;
+use App\Jobs\SendOrderConfirmation;
+use App\Jobs\NotifyRestaurantOfNewOrder;
+use App\Jobs\AssignDeliveryPartner;
+use App\Jobs\GenerateOrderInvoice;
+use App\Jobs\GenerateOrderExport;
+
+
 
 class OrderController extends Controller
 {
@@ -304,6 +311,12 @@ class OrderController extends Controller
                 'order_status' => 'pending',
                 'notes' => $request->notes,
             ]);
+
+            SendOrderConfirmation::dispatch($order->id);
+            NotifyRestaurantOfNewOrder::dispatch($order->id);
+            AssignDeliveryPartner::dispatch($order->id);
+            GenerateOrderInvoice::dispatch($order->id);
+            GenerateOrderExport::dispatch($user->id);
 
 
             //Create order/item snapshots within a transaction.

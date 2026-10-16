@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use App\Events\OrderStatusUpdated;
 
 class OrderStatusService
 {
@@ -50,6 +51,8 @@ class OrderStatusService
             $order->order_status = $newStatus;
             $order->save();
 
+            event(new OrderStatusUpdated($order));
+
             OrderStatusHistory::create([
                 'order_id' => $order->id,
                 'status' => $newStatus,
@@ -57,6 +60,10 @@ class OrderStatusService
                     ?? "Status changed from {$oldStatus} to {$newStatus}",
                 'changed_at' => now(),
             ]);
+
+            DB::afterCommit(function () use ($order) {
+                event(new OrderStatusUpdated($order));
+            });
 
             return $order;
         });

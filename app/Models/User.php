@@ -15,6 +15,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\TransientToken;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Address;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 #[Fillable(['name', 'email', 'password'])]  
 #[Hidden(['password', 'remember_token'])]
@@ -80,5 +83,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function ownedRestaurants(): HasMany
     {
         return $this->hasMany(Restaurant::class, 'owner_id');
+    }
+
+     /** @return BelongsTo<Address, $this> */
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
     }
 }

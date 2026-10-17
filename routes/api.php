@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DeliveryController;
@@ -17,6 +18,12 @@ use App\Http\Controllers\Api\Order\RejectOrderController;
 use App\Http\Controllers\Api\Order\StartPreparingOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrderExportController;
+use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Api\Admin\RefundController as AdminRefundController;
+use App\Http\Controllers\Api\Admin\ConfigurationController;
+use App\Http\Controllers\Api\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,6 +122,72 @@ Route::middleware('auth:sanctum')->group(function () {
         '/delivery/availability',
         [DeliveryController::class, 'updateAvailability']
     );
+
+
+    Route::prefix('admin')
+        ->middleware('role:administrator')
+        ->group(function () {
+            // Users
+            Route::get('/users', [UserController::class, 'index']);
+            Route::get('/users/{user}', [UserController::class, 'show']);
+
+            // Restaurants
+            Route::get('/restaurants', [
+                AdminRestaurantController::class,
+                'index'
+            ]);
+
+            Route::get('/restaurants/{restaurant}', [
+                AdminRestaurantController::class,
+                'show'
+            ]);
+
+            Route::patch('/restaurants/{restaurant}/status', [
+                AdminRestaurantController::class,
+                'updateStatus'
+            ]);
+
+            Route::get('/orders', [
+                AdminOrderController::class,
+                'index',
+            ]);
+
+            Route::get('/orders/{order}', [
+                AdminOrderController::class,
+                'show',
+            ]);
+
+            Route::get('/refunds', [
+                AdminRefundController::class,
+                'index',
+            ]);
+
+            Route::get('/refunds/{refund}', [
+                AdminRefundController::class,
+                'show',
+            ]);
+
+            Route::get('/configurations', [
+                ConfigurationController::class,
+                'index',
+            ]);
+
+            Route::patch('/configurations/{configuration}', [
+                ConfigurationController::class,
+                'update',
+            ]);
+
+            // Order Export
+            Route::post('/orders/export', [
+                OrderExportController::class,
+                'export',
+            ]);
+
+            Route::get('/dashboard', [
+                DashboardController::class,
+                'index',
+            ]);
+        });
 });
 
 /*
@@ -168,4 +241,7 @@ Route::post(
     PaymentWebhookController::class
 );
 
-Route::middleware('auth:sanctum')->post('/orders/export',[OrderExportController::class, 'export'] );
+Route::middleware('auth:sanctum')->post('/orders/export', [OrderExportController::class, 'export']);
+
+
+Route::post('/orders/{order}/rating', [RatingController::class, 'store']);

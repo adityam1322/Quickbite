@@ -24,9 +24,12 @@ class GenerateOrderExport implements ShouldQueue
     }
 
     public function __construct(
-        public int $userId
-    ) {
-    }
+        public int $userId,
+        public int $restaurantId,
+        public string $from,
+        public string $to,
+        public string $format = 'csv',
+    ) {}
 
     public function handle(): void
     {
@@ -34,6 +37,7 @@ class GenerateOrderExport implements ShouldQueue
             ->select([
                 'id',
                 'order_number',
+                'restaurant_id',
                 'payment_status',
                 'order_status',
                 'subtotal',
@@ -43,10 +47,17 @@ class GenerateOrderExport implements ShouldQueue
                 'total_amount',
                 'created_at',
             ])
+            ->where('restaurant_id', $this->restaurantId)
+            ->whereBetween('created_at', [
+                $this->from . ' 00:00:00',
+                $this->to . ' 23:59:59',
+            ])
             ->orderBy('id')
             ->get();
 
-        $filePath = 'exports/orders-' . now()->format('Y-m-d-His') . '.csv';
+        $extension = $this->format === 'xlsx' ? 'xlsx' : 'csv';
+
+        $filePath = 'exports/orders-' . now()->format('Y-m-d-His') . '.' . $extension;
 
         $csv = "Order ID,Order Number,Payment Status,Order Status,Subtotal,Tax,Delivery Fee,Discount,Total,Created At\n";
 

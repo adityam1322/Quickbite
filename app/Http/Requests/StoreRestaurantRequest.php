@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Restaurant;
 
 class StoreRestaurantRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class StoreRestaurantRequest extends FormRequest
     {
         return $this->user()->can(
             'create',
-            REstaurant::class
+            Restaurant::class
         );
     }
 
@@ -43,13 +44,6 @@ class StoreRestaurantRequest extends FormRequest
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
 
             'is_active' => ['sometimes', 'boolean'],
-
-            'image' => [
-            'required',
-            'image',
-            'mimes:jpg,jpeg,png,webp',
-            'max:2048',
-            ],
         ];
     }
 }

@@ -10,6 +10,14 @@ class RestaurantPolicy
     /**
      * Determine whether the user can view the restaurant.
      */
+
+    public function create(User $user): bool
+    {
+        return $user->hasRole('administrator')
+            && $user->can('restaurants.create');
+    }
+
+
     public function view(
         User $user,
         Restaurant $restaurant

@@ -70,19 +70,19 @@ class MenuItem extends Model
     }
 
     public function isAvailableAt(?Carbon $at = null): bool
-    {
-        if (! $this->is_available) {
-            return false;
-        }
-
-        $at ??= now();
-        $time = $at->format('H:i:s');
-
-        return $this->availabilities()
-            ->where('date_of_week', (string) $at->dayOfWeek)
-            ->where('is_available', true)
-            ->where('start_time', '<=', $time)
-            ->where('end_time', '>=', $time)
-            ->exists();
+{
+    if (! $this->is_avialable) {
+        return false;
     }
+
+    $at ??= now();
+    $time = $at->format('H:i:s');
+
+    return $this->availabilities()
+        ->where('date_of_week', (string) $at->dayOfWeek)
+        ->where('is_available', true)
+        ->where('start_time', '<=', $time)
+        ->where('end_time', '>=', $time)
+        ->exists();
+}
 }

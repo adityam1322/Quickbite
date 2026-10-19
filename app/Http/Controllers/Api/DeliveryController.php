@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateDeliveryRequest;
 use App\Models\DeliveryAssignment;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UpdateDeliveryAvailabilityRequest;
 
@@ -32,7 +33,7 @@ class DeliveryController extends Controller
 
     public function show(DeliveryAssignment $delivery): JsonResponse
     {
-        $this->authorize('view', $delivery);
+        Gate::authorize('view', $delivery);
 
         return response()->json([
             'delivery' => $delivery,

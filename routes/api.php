@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\RefundController as AdminRefundController;
 use App\Http\Controllers\Api\Admin\ConfigurationController;
 use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\FoodDiscoveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
         'restaurants',
         RestaurantController::class
     );
+    
+    //ai agent api
+    Route::post('/ai/food-discovery', [
+        FoodDiscoveryController::class,
+        'discover',
+    ]);
 
     // Menu items
     Route::apiResource(

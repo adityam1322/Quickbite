@@ -4,4 +4,5 @@ return [
     App\Providers\AppServiceProvider::class,
     App\Providers\PaymentServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
+    App\Providers\FortifyServiceProvider::class,
 ];

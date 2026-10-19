@@ -1,58 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# QuickBite
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+QuickBite is a Laravel API for food ordering. It includes restaurant and menu
+management, carts, orders, delivery workflows, payments, administrator
+endpoints, and AI-powered food discovery.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3 or later with the extensions required by Laravel
+- Composer
+- Node.js and npm
+- PostgreSQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone the repository and enter the project directory:
 
-## Learning Laravel
+   ```bash
+   git clone <repository-url>
+   cd Quickbite
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. Install PHP dependencies and create your local environment file:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   ```bash
+   composer install
+   ```
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   If `.env` was not created automatically, copy the example:
 
-## Agentic Development
+   ```bash
+   cp .env.example .env
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   On Windows PowerShell, use:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+3. Create a PostgreSQL database, then set its connection details in `.env`.
+   The example file uses PostgreSQL (`DB_CONNECTION=pgsql`); set `DB_HOST`,
+   `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` for your local
+   database.
+
+4. Generate the application key and run the database migrations:
+
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
+
+   To load the included sample data as well, run:
+
+   ```bash
+   php artisan db:seed
+   ```
+
+5. Install the frontend dependencies and build the assets:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+6. Start the full local development stack:
+
+   ```bash
+   composer run dev
+   ```
+
+   This starts the Laravel web server, queue worker, Vite, and Reverb. If you
+   only need the API and frontend, run `php artisan serve` and `npm run dev` in
+   separate terminals instead.
+
+## Environment configuration
+
+The `.env.example` file documents the available settings. Configure these as
+needed for your environment:
+
+- **Database:** PostgreSQL connection values must point to a reachable database
+  before running migrations.
+- **AI food discovery:** Set `OPENAI_API_KEY` to use the default OpenAI provider.
+  The application also supports other providers; see `config/ai.php` for the
+  configured provider names and their environment variables.
+- **Payment webhooks:** Set `PAYMENT_WEBHOOK_SECRET` to the secret used to
+  validate incoming payment webhook signatures.
+- **Realtime broadcasting:** Reverb settings are included in `.env.example`.
+  Configure its app credentials when using broadcasting. The full development
+  stack starts Reverb automatically; to run it separately, use
+  `php artisan reverb:start`.
+
+Keep credentials in your local `.env` file and never commit them.
+
+## API
+
+API routes are defined in `routes/api.php` and are available under the `/api`
+prefix. Most routes require a Laravel Sanctum bearer token. For example, login
+is available at `POST /api/login`; authenticated clients can use
+`GET /api/me`. The AI food discovery endpoint is `POST /api/ai/food-discovery`.
+
+## Tests
+
+Run the test suite with:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test
 ```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

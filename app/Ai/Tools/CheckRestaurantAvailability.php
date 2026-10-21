@@ -23,7 +23,7 @@ class CheckRestaurantAvailability implements Tool
      */
     public function handle(Request $request): Stringable|string
     {
-        $restaurantId = $request->input('restaurant_id');
+        $restaurantId = $request['restaurant_id'];
 
         $restaurant = Restaurant::query()
             ->select([

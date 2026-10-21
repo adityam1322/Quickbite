@@ -19,13 +19,45 @@ class MenuCategorieFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->randomElement(['Starters', 'Mains', 'Desserts', 'Drinks']);
+        $categories = [
+            'Starters',
+            'Main Course',
+            'Biryani',
+            'North Indian',
+            'South Indian',
+            'Chinese',
+            'Indo-Chinese',
+            'Pizza',
+            'Burgers',
+            'Rolls',
+            'Street Food',
+            'Maharashtrian Specials',
+            'Tandoor',
+            'Rice & Noodles',
+            'Breads',
+            'Thali',
+            'Desserts',
+            'Beverages',
+            'Breakfast',
+            'Combos',
+        ];
+
+        $name = fake()->randomElement($categories);
 
         return [
             'restaurant_id' => Restaurant::factory(),
+
             'name' => $name,
+
             'slug' => Str::slug($name),
-            'description' => fake()->sentence(),
+
+            'description' => fake()->randomElement([
+                "Delicious {$name} prepared fresh for our customers.",
+                "Freshly prepared {$name} with authentic Indian flavours.",
+                "A selection of popular {$name} made with quality ingredients.",
+                "Enjoy our freshly prepared {$name}.",
+            ]),
+
             'is_active' => true,
         ];
     }

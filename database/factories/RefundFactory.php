@@ -15,9 +15,26 @@ class RefundFactory extends Factory
     {
         return [
             'payment_id' => Payment::factory(),
-            'refund_refrence' => fake()->uuid(),
-            'amount' => fake()->randomFloat(2, 1, 50),
-            'reson' => fake()->sentence(),
+            'refund_refrence' => 'REF-' . fake()->unique()->bothify('########-??????'),
+            'amount' => fake()->randomElement([
+                99,
+                149,
+                199,
+                249,
+                299,
+                349,
+                399,
+                499,
+            ]),
+            'reson' => fake()->randomElement([
+                'Customer cancelled the order.',
+                'Order was cancelled by the restaurant.',
+                'Payment was charged but order could not be processed.',
+                'Customer requested a refund.',
+                'Order was not delivered.',
+                'Duplicate payment was detected.',
+                'Restaurant was unable to fulfill the order.',
+            ]),
             'status' => 'pending',
             'refunded' => null,
         ];

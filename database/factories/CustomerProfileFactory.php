@@ -20,8 +20,12 @@ class CustomerProfileFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'phone' => fake()->phoneNumber(),
-            'date_of_birth' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
+
+            'phone' => '+91 9' . fake()->numerify('#########'),
+
+            'date_of_birth' => fake()
+                ->dateTimeBetween('-70 years', '-18 years')
+                ->format('Y-m-d'),
         ];
     }
 }

@@ -20,9 +20,17 @@ class MenuItemPriceFactory extends Factory
     {
         return [
             'menu_item_id' => MenuItem::factory(),
-            'price' => fake()->randomFloat(2, 4, 45),
-            'currency' => 'USD',
+
+
+            'price' => fake()->randomFloat(2, 50, 800),
+
+
+            'currency' => 'INR',
+
+
             'effective_from' => today()->subDay(),
+
+
             'effective_until' => null,
         ];
     }

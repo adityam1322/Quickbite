@@ -13,14 +13,38 @@ class PaymentFactory extends Factory
 
     public function definition(): array
     {
-        return [
-            'order_id' => Order::factory(),
-            'transaction_id' => fake()->uuid(),
-            'payment_method' => fake()->randomElement(['cash_on_delivery', 'card']),
-            'amount' => fake()->randomFloat(2, 10, 100),
-            'currency' => 'USD',
-            'status' => 'pending',
-            'paid_at' => now(),
-        ];
+       return [
+    'order_id' => Order::factory(),
+    'transaction_id' => fake()->uuid(),
+    'payment_method' => fake()->randomElement([
+        'cash_on_delivery',
+        'upi',
+        'card',
+        'net_banking',
+        'wallet',
+    ]),
+    'amount' => fake()->randomElement([
+        199,
+        249,
+        299,
+        349,
+        399,
+        499,
+        599,
+        699,
+        799,
+    ]),
+    'currency' => 'INR',
+    'status' => fake()->randomElement([
+        'pending',
+        'successful',
+        'failed',
+        'refunded',
+    ]),
+    'paid_at' => fake()->optional(0.8)->dateTimeBetween(
+        '-2 days',
+        'now'
+    ),
+];
     }
 }

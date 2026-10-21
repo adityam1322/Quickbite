@@ -21,11 +21,11 @@ class FoodDiscoveryController extends Controller
             ],
         ]);
 
-        $agent = new FoodDiscoveryAgent();
-
         $startedAt = microtime(true);
 
         try {
+            $agent = new FoodDiscoveryAgent();
+
             $response = $agent->prompt(
                 $data['message']
             );
@@ -49,6 +49,7 @@ class FoodDiscoveryController extends Controller
                 'data' => $response,
             ]);
         } catch (Throwable $exception) {
+
             $durationMs = (int) round(
                 (microtime(true) - $startedAt) * 1000
             );
@@ -58,11 +59,15 @@ class FoodDiscoveryController extends Controller
                 'duration_ms' => $durationMs,
                 'error' => $exception->getMessage(),
                 'exception' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'Food discovery service is temporarily unavailable.',
+                'error' => app()->environment('local')
+                    ? $exception->getMessage()
+                    : null,
             ], 503);
         }
     }

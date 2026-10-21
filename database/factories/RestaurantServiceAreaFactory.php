@@ -18,11 +18,56 @@ class RestaurantServiceAreaFactory extends Factory
      */
     public function definition(): array
     {
+        $areas = [
+            [
+                'name' => 'Dadar East',
+                'postal_code' => '400014',
+            ],
+            [
+                'name' => 'Matunga East',
+                'postal_code' => '400019',
+            ],
+            [
+                'name' => 'Sion',
+                'postal_code' => '400022',
+            ],
+            [
+                'name' => 'Kurla East',
+                'postal_code' => '400070',
+            ],
+            [
+                'name' => 'Ghatkopar East',
+                'postal_code' => '400077',
+            ],
+            [
+                'name' => 'Vikhroli East',
+                'postal_code' => '400083',
+            ],
+            [
+                'name' => 'Bhandup East',
+                'postal_code' => '400042',
+            ],
+            [
+                'name' => 'Mulund East',
+                'postal_code' => '400081',
+            ],
+            [
+                'name' => 'Byculla East',
+                'postal_code' => '400027',
+            ],
+            [
+                'name' => 'Parel',
+                'postal_code' => '400012',
+            ],
+        ];
+
+        $area = fake()->randomElement($areas);
+
         return [
             'restaurant_id' => Restaurant::factory(),
-            'area_name' => fake()->unique()->city(),
-            'city' => fake()->city(),
-            'postal_code' => fake()->postcode(),
+            'area_name' => $area['name'],
+            'city' => 'Mumbai',
+            'postal_code' => $area['postal_code'],
             'is_active' => true,
         ];
     }

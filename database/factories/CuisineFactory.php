@@ -17,14 +17,41 @@ class CuisineFactory extends Factory
      */
     public function definition(): array
     {
-
-        $name = fake()->randomElement([
-         'Chinese', 'Indian', 'Italian', 'Japanese', 'Mexican',
+        $name = fake()->unique()->randomElement([
+            'North Indian',
+            'South Indian',
+            'Maharashtrian',
+            'Punjabi',
+            'Gujarati',
+            'Bengali',
+            'Rajasthani',
+            'Mughlai',
+            'Chinese',
+            'Indo-Chinese',
+            'Italian',
+            'Japanese',
+            'Mexican',
+            'Thai',
+            'Korean',
+            'Continental',
+            'Fast Food',
+            'Street Food',
+            'Biryani',
+            'Pizza',
+            'Burger',
+            'Desserts',
+            'Cafe',
+            'Healthy Food',
+            'Seafood',
         ]);
 
         return [
             'name' => $name,
-            'slug' => str($name)->slug()->toString(),
+
+            'slug' => str($name)
+                ->slug()
+                ->toString(),
+
             'is_active' => true,
         ];
     }

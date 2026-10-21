@@ -2,10 +2,10 @@
 
 namespace App\Ai\Tools;
 
+use App\Models\MenuItem;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
-use App\Models\MenuItem;
 use Stringable;
 
 class SearchMenuItems implements Tool
@@ -15,7 +15,7 @@ class SearchMenuItems implements Tool
      */
     public function description(): Stringable|string
     {
-        return 'Search active menu items by restaurant, category, vegetarian preference, and price.';
+        return 'Search active menu items by restaurant, category, vegetarian preference, name, and maximum price.';
     }
 
     /**
@@ -23,14 +23,14 @@ class SearchMenuItems implements Tool
      */
     public function handle(Request $request): Stringable|string
     {
-        $restaurantId = $request->input('restaurant_id');
-        $categoryId = $request->input('category_id');
-        $vegetarian = $request->input('vegetarian');
-        $maxPrice = $request->input('max_price');
-        $search = $request->input('search');
+        $restaurantId = $request['restaurant_id'] ?? null;
+        $categoryId = $request['category_id'] ?? null;
+        $vegetarian = $request['vegetarian'] ?? null;
+        $maxPrice = $request['max_price'] ?? null;
+        $search = $request['search'] ?? null;
 
         $query = MenuItem::query()
-            ->where('is_avialable', true)
+            ->where('is_available', true)
             ->with([
                 'prices',
                 'category:id,name',
@@ -42,7 +42,7 @@ class SearchMenuItems implements Tool
                 'name',
                 'slug',
                 'is_vegetarian',
-                'is_avialable',
+                'is_available',
             ]);
 
         /*
@@ -53,28 +53,32 @@ class SearchMenuItems implements Tool
         }
 
         /*
-         * Filter by menu category.
+         * Filter by category.
          */
         if ($categoryId !== null) {
             $query->where('menu_categories_id', $categoryId);
         }
 
         /*
-         * Filter vegetarian items.
+         * Filter vegetarian.
          */
         if ($vegetarian !== null) {
             $query->where('is_vegetarian', $vegetarian);
         }
 
         /*
-         * Search by menu item name.
+         * Search by item name.
          */
-        if ($search) {
-            $query->where('name', 'ilike', '%' . $search . '%');
+        if ($search !== null && trim($search) !== '') {
+            $query->where(
+                'name',
+                'ilike',
+                '%' . trim($search) . '%'
+            );
         }
 
         /*
-         * Keep the result bounded.
+         * Get menu items.
          */
         $items = $query
             ->orderBy('id')
@@ -82,64 +86,78 @@ class SearchMenuItems implements Tool
             ->get();
 
         /*
-         * Apply the price filter using the current
-         * menu item price.
+         * Prepare result.
          */
-        $items = $items->filter(function (MenuItem $item) use ($maxPrice) {
-            if ($maxPrice === null) {
-                return true;
-            }
+        $result = [];
 
+        foreach ($items as $item) {
+
+            /*
+             * Find current active price.
+             */
             $currentPrice = $item->prices
                 ->filter(function ($price) {
-                    $today = now()->toDateString();
 
-                    return $price->effective_from <= $today
+                    return $price->effective_from <= today()
                         && (
                             $price->effective_until === null
-                            || $price->effective_until >= $today
+                            || $price->effective_until >= today()
                         );
                 })
-                ->sortByDesc('effective_from')
-                ->first();
+                ->sort(function ($a, $b) {
 
-            return $currentPrice !== null
-                && (float) $currentPrice->price <= (float) $maxPrice;
-        });
+                    /*
+                     * Latest effective_from first.
+                     */
+                    if ($a->effective_from != $b->effective_from) {
+                        return $a->effective_from < $b->effective_from
+                            ? 1
+                            : -1;
+                    }
 
-        /*
-         * Return only the data required by the AI.
-         */
-        $result = $items->map(function (MenuItem $item) {
-            $today = now()->toDateString();
-
-            $currentPrice = $item->prices
-                ->filter(function ($price) use ($today) {
-                    return $price->effective_from <= $today
-                        && (
-                            $price->effective_until === null
-                            || $price->effective_until >= $today
-                        );
+                    /*
+                     * If same date, latest ID first.
+                     */
+                    return $a->id < $b->id ? 1 : -1;
                 })
-                ->sortByDesc('effective_from')
                 ->first();
 
-            return [
+            /*
+             * If max price is requested,
+             * skip items without a valid current price.
+             */
+            if ($maxPrice !== null) {
+
+                if ($currentPrice === null) {
+                    continue;
+                }
+
+                if ((float) $currentPrice->price > (float) $maxPrice) {
+                    continue;
+                }
+            }
+
+            /*
+             * Add item to result.
+             */
+            $result[] = [
                 'id' => $item->id,
                 'restaurant_id' => $item->restaurant_id,
                 'category_id' => $item->menu_categories_id,
+                'category_name' => $item->category?->name,
                 'name' => $item->name,
-                'vegetarian' => $item->is_vegetarian,
-                'price' => $currentPrice?->price,
+                'vegetarian' => (bool) $item->is_vegetarian,
+                'price' => $currentPrice !== null
+                    ? (float) $currentPrice->price
+                    : null,
                 'currency' => $currentPrice?->currency,
             ];
-        })->values()->all();
+        }
 
         return json_encode([
             'menu_items' => $result,
         ]);
     }
-
 
     /**
      * Get the tool's schema definition.
@@ -147,15 +165,25 @@ class SearchMenuItems implements Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-        'restaurant_id' => $schema->integer()->nullable(),
+            'restaurant_id' => $schema
+                ->integer()
+                ->nullable(),
 
-        'category_id' => $schema->integer()->nullable(),
+            'category_id' => $schema
+                ->integer()
+                ->nullable(),
 
-        'vegetarian' => $schema->boolean()->nullable(),
+            'vegetarian' => $schema
+                ->boolean()
+                ->nullable(),
 
-        'max_price' => $schema->number()->nullable(),
+            'max_price' => $schema
+                ->number()
+                ->nullable(),
 
-        'search' => $schema->string()->nullable(),
-       ];
+            'search' => $schema
+                ->string()
+                ->nullable(),
+        ];
     }
 }

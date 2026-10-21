@@ -13,22 +13,69 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OrderFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Order::class;
+
     public function definition(): array
     {
-        $subtotal = fake()->randomFloat(2, 12, 100);
-        $taxAmount = $subtotal * 0.05;
-        $deliveryFee = fake()->randomFloat(2, 1, 8);
-        $discountAmount = fake()->randomFloat(2, 0, 10);
-        $totalAmount =
-            $subtotal
-            + $taxAmount
-            + $deliveryFee
-            - $discountAmount;
+        $orderStatus = fake()->randomElement([
+            'pending',
+            'confirmed',
+            'preparing',
+            'ready',
+            'delivered',
+            'cancelled',
+        ]);
+
+        $paymentStatus = match ($orderStatus) {
+            'pending' => fake()->randomElement([
+                'pending',
+                'paid',
+            ]),
+            'cancelled' => fake()->randomElement([
+                'failed',
+                'refunded',
+            ]),
+            'delivered' => 'paid',
+            default => 'paid',
+        };
+
+        $subtotal = fake()->randomElement([
+            199,
+            249,
+            299,
+            349,
+            399,
+            499,
+            599,
+            699,
+            799,
+        ]);
+
+        $taxAmount = round($subtotal * 0.05, 2);
+
+        $deliveryFee = fake()->randomElement([
+            20,
+            25,
+            30,
+            35,
+            40,
+            50,
+        ]);
+
+        $discountAmount = fake()->randomElement([
+            0,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+        ]);
+
+        $totalAmount = max(
+            0,
+            $subtotal + $taxAmount + $deliveryFee - $discountAmount
+        );
 
         return [
             'user_id' => User::factory(),
@@ -44,26 +91,17 @@ class OrderFactory extends Factory
             'delivery_fee' => $deliveryFee,
             'discount_amount' => $discountAmount,
             'total_amount' => $totalAmount,
-            'payment_status' => fake()->randomElement([
-                'pending',
-                'paid',
-                'failed',
-                'refunded',
+            'payment_status' => $paymentStatus,
+            'idempotency_key' => 'seed-' . fake()->unique()->bothify('########-??????'),
+            'order_status' => $orderStatus,
+            'notes' => fake()->randomElement([
+                'Please deliver at the main gate.',
+                'Please call when you arrive.',
+                'Please do not ring the bell.',
+                'Leave the order with the security guard.',
+                'Please deliver near the reception.',
+                'Call me before delivery.',
             ]),
-
-             'idempotency_key' => 'seed-' . fake()->unique()->bothify('########-??????'),
-
-
-            'order_status' => fake()->randomElement([
-                'pending',
-                'confirmed',
-                'preparing',
-                'ready',
-                'delivered',
-                'cancelled',
-            ]),
-
-            'notes' => fake()->sentence(),
         ];
     }
 }

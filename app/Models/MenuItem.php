@@ -13,19 +13,19 @@ class MenuItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'menu_categories_id',
-        'restaurant_id',
-        'name',
-        'slug',
-        'discription',
-        'is_vegetarian',
-        'is_avialable',
-    ];
+    'menu_categories_id',
+    'restaurant_id',
+    'name',
+    'slug',
+    'discription',
+    'is_vegetarian',
+    'is_available',
+];
 
-    protected $casts = [
-        'is_vegetarian' => 'boolean',
-        'is_avialable' => 'boolean',
-    ];
+protected $casts = [
+    'is_vegetarian' => 'boolean',
+    'is_available' => 'boolean',
+];
 
     /** @return BelongsTo<MenuCategorie, $this> */
     public function category(): BelongsTo
@@ -71,7 +71,7 @@ class MenuItem extends Model
 
     public function isAvailableAt(?Carbon $at = null): bool
 {
-    if (! $this->is_avialable) {
+    if (! $this->is_available) {
         return false;
     }
 

@@ -20,8 +20,32 @@ class MenuItemVariantFactory extends Factory
     {
         return [
             'menu_item_id' => MenuItem::factory(),
-            'name' => fake()->randomElement(['Small', 'Regular', 'Large', 'Extra cheese']),
-            'price' => fake()->randomFloat(2, 0, 12),
+
+            'name' => fake()->randomElement([
+                'Small',
+                'Regular',
+                'Large',
+                'Extra Cheese',
+                'Extra Paneer',
+                'Extra Chicken',
+                'Family Pack',
+            ]),
+
+            'price' => fake()->randomElement([
+                0,
+                20,
+                30,
+                40,
+                50,
+                60,
+                80,
+                100,
+                120,
+                150,
+                180,
+                200,
+            ]),
+
             'is_avialable' => true,
         ];
     }
